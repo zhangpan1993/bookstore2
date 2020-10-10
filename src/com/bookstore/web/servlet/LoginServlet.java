@@ -24,8 +24,12 @@ public class LoginServlet extends HttpServlet {
         try {
             User user = userService.login(username,password);
             System.out.println(user);
-            if (user != null){
+            if (user != null && "1".equals(user.getState())){
                 req.getRequestDispatcher("/admin/login/home.jsp").forward(req,resp);
+            }else if("0".equals(user.getState())){
+
+                req.setAttribute("loginerr","用户没有激活");
+                req.getRequestDispatcher("/login.jsp").forward(req,resp);
             }else{
 
                 req.setAttribute("loginerr","用户名或密码错误");
