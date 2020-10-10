@@ -27,6 +27,14 @@ public class UserService {
 
         try {
             User user = userDao.findUserByUsernameAndPassword(username,password);
+
+            if (user == null ){
+                throw new UserException("用户名或密码错误！");
+            }else if (user.getState() == 0){
+
+                throw new UserException("用户账号未激活！");
+            }
+
             return user;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -44,10 +52,8 @@ public class UserService {
         try {
             user = userDao.findUserByActiveCode(activeCode);
             if (user != null){
-
                 userDao.updateActiveState(activeCode);
             }else{
-
                 throw new UserException("激活失败");
             }
         } catch (SQLException | UserException e) {

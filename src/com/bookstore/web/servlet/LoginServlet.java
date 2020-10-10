@@ -24,19 +24,20 @@ public class LoginServlet extends HttpServlet {
         try {
             User user = userService.login(username,password);
             System.out.println(user);
-            if (user != null && "1".equals(user.getState())){
-                req.getRequestDispatcher("/admin/login/home.jsp").forward(req,resp);
-            }else if("0".equals(user.getState())){
+            String path = null;
+            if ("管理员".equals(user.getRole()) ){
+                path = "/admin/login/home.jsp";
 
-                req.setAttribute("loginerr","账号未激活激活，请先激活！");
-                req.getRequestDispatcher("/login.jsp").forward(req,resp);
-            }else{
-
-                req.setAttribute("loginerr","用户名或密码错误！");
-                req.getRequestDispatcher("/login.jsp").forward(req,resp);
+            }else if ("普通用户".equals(user.getRole())){
+                path = "/myAccount.jsp";
             }
+
+            req.getSession().setAttribute("user",user);
+            req.getRequestDispatcher(path).forward(req,resp);
         } catch (UserException e) {
             e.printStackTrace();
+            req.setAttribute("loginerr",e.getMessage());
+            req.getRequestDispatcher("/login.jsp").forward(req,resp);
         }
 
 
