@@ -28,7 +28,7 @@ public class LoginServlet extends HttpServlet {
                 req.getRequestDispatcher("/admin/login/home.jsp").forward(req,resp);
             }else if("0".equals(user.getState())){
 
-                req.setAttribute("loginerr","用户没有激活");
+                req.setAttribute("loginerr","账号未激活激活，请先激活");
                 req.getRequestDispatcher("/login.jsp").forward(req,resp);
             }else{
 
